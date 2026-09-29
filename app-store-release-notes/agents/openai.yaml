@@ -1,0 +1,4 @@
+interface:
+  display_name: "App Store 本地化内容"
+  short_description: "翻译并更新 App Store 多语言更新说明或描述"
+  default_prompt: "使用 $app-store-release-notes，把我提供或指定语言的更新说明或 App 描述翻译并更新到现有语言。"
