@@ -41,15 +41,34 @@ A Codex skill that translates, previews, validates, and updates localized App St
 node --version
 ```
 
+### 项目结构
+
+仓库根目录就是 Skill 根目录，`README.md` 和 `SKILL.md` 都只维护一份：
+
+```text
+app-store-release-notes/
+├── README.md
+├── SKILL.md
+├── agents/
+├── references/
+├── scripts/
+├── tools/package_skill.py
+└── dist/app-store-release-notes.zip
+```
+
+`tools/package_skill.py` 从根目录的规范文件生成 ZIP。`dist/` 中的 ZIP 是安装产物，不是第二份文档源。
+
 ### 安装
 
-#### 方法一：复制 Skill 文件夹
+#### 方法一：从仓库源码安装
 
-将整个 `app-store-release-notes` 文件夹复制到 Codex Skills 目录：
+在仓库根目录执行：
 
 ```sh
-mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
-cp -R app-store-release-notes "${CODEX_HOME:-$HOME/.codex}/skills/"
+DEST="${CODEX_HOME:-$HOME/.codex}/skills/app-store-release-notes"
+mkdir -p "$DEST"
+cp README.md SKILL.md "$DEST/"
+cp -R agents references scripts "$DEST/"
 ```
 
 安装后的主要文件应该位于：
@@ -60,14 +79,20 @@ cp -R app-store-release-notes "${CODEX_HOME:-$HOME/.codex}/skills/"
 
 #### 方法二：从 ZIP 安装
 
-这个项目提供的 ZIP 包含顶层 Skill 文件夹：
+仓库中的 ZIP 位于 `dist/app-store-release-notes.zip`，内部包含顶层 Skill 文件夹：
 
 ```sh
 mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
-unzip app-store-release-notes.zip -d "${CODEX_HOME:-$HOME/.codex}/skills"
+unzip dist/app-store-release-notes.zip -d "${CODEX_HOME:-$HOME/.codex}/skills"
 ```
 
 如果同名目录已经存在，请先备份旧版本，再替换整个文件夹，避免新旧脚本混合。
+
+修改源码后，可以重新生成 ZIP：
+
+```sh
+python3 tools/package_skill.py
+```
 
 安装后，在下一条 Codex 消息或新的任务中显式使用：
 
@@ -373,15 +398,34 @@ Check Node.js:
 node --version
 ```
 
+### Repository layout
+
+The repository root is the skill root, so `README.md` and `SKILL.md` each have one canonical copy:
+
+```text
+app-store-release-notes/
+├── README.md
+├── SKILL.md
+├── agents/
+├── references/
+├── scripts/
+├── tools/package_skill.py
+└── dist/app-store-release-notes.zip
+```
+
+`tools/package_skill.py` builds the ZIP from the canonical root files. The archive under `dist/` is an installation artifact, not a second documentation source.
+
 ### Installation
 
-#### Install the folder
+#### Install from the repository source
 
-Copy the complete skill folder into the Codex skills directory:
+Run this from the repository root:
 
 ```sh
-mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
-cp -R app-store-release-notes "${CODEX_HOME:-$HOME/.codex}/skills/"
+DEST="${CODEX_HOME:-$HOME/.codex}/skills/app-store-release-notes"
+mkdir -p "$DEST"
+cp README.md SKILL.md "$DEST/"
+cp -R agents references scripts "$DEST/"
 ```
 
 The installed entry point should be:
@@ -392,12 +436,20 @@ The installed entry point should be:
 
 #### Install from the ZIP archive
 
+The repository archive is `dist/app-store-release-notes.zip` and contains the top-level skill folder:
+
 ```sh
 mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
-unzip app-store-release-notes.zip -d "${CODEX_HOME:-$HOME/.codex}/skills"
+unzip dist/app-store-release-notes.zip -d "${CODEX_HOME:-$HOME/.codex}/skills"
 ```
 
 If a skill with the same name is already installed, back it up and replace the complete folder so old and new helper files are not mixed.
+
+Regenerate the archive after changing source files:
+
+```sh
+python3 tools/package_skill.py
+```
 
 Invoke it on the next Codex turn or in a new task with:
 
